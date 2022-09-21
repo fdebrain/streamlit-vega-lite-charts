@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "streamlit-vega-lite-charts"
+version = "0.1.0"
+description = ""
+authors = ["fdebrain <12777340+fdebrain@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+streamlit = "^1.12.2"
+scikit-learn = "^1.1.2"
+
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+autopep8 = "^1.7.0"
+black = "^22.8.0"
+isort = "^5.10.1"
+flake8 = "^5.0.4"
+
+[tool.black]
+line-length = 90
+extend-ignore = "E203"
+
+[tool.isort]
+profile = "black"
+line_length = 90
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
