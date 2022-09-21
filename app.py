@@ -53,6 +53,9 @@ def generate_select_boxes(options_x, options_y, options_color, key_prefix):
 
 if __name__ == "__main__":
     st.header("Streamlit Vega Lite Charts")
+    st.caption(
+        "Generate insightful charts from tabular data using Vega-Lite and Streamlit."
+    )
 
     if name := st.selectbox(label="Select a dataset", options=[""] + DATASET_LIST):
         # Load data + add synthetic datetime column
