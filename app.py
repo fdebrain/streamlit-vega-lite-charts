@@ -7,6 +7,7 @@ from src.plots import (
     plot_2d_histo,
     plot_bar,
     plot_box,
+    plot_donut,
     plot_histo,
     plot_scatter,
     plot_timeseries,
@@ -39,16 +40,31 @@ def get_data(name):
 
 
 def generate_select_boxes(options_x, options_y, options_color, key_prefix):
-    col_x = st.selectbox(label="X", options=[""] + options_x, key=f"{key_prefix}_x")
-    col_y = st.selectbox(label="Y", options=[""] + options_y, key=f"{key_prefix}_y")
+    select_boxes = [None, None, None]
+    if options_x:
+        col_x = st.selectbox(
+            label="X",
+            options=[""] + options_x,
+            key=f"{key_prefix}_x",
+        )
+        select_boxes[0] = col_x
+
+    if options_y:
+        col_y = st.selectbox(
+            label="Y",
+            options=[""] + options_y,
+            key=f"{key_prefix}_y",
+        )
+        select_boxes[1] = col_y
+
     if options_color:
         col_color = st.selectbox(
             label="Color",
             options=[""] + options_color,
             key=f"{key_prefix}_color",
         )
-        return col_x, col_y, col_color
-    return col_x, col_y
+        select_boxes[2] = col_color
+    return select_boxes
 
 
 if __name__ == "__main__":
@@ -83,8 +99,15 @@ if __name__ == "__main__":
             st.json({"num": cont_cols, "cat": cat_cols, "datetime": datetime_cols})
 
         # Plot
-        tab_bar, tab_histo, tab_timeseries, tab_boxplot, tab_scatter = st.tabs(
-            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter"]
+        tab_bar, tab_histo, tab_timeseries, tab_boxplot, tab_scatter, tab_donut = st.tabs(
+            [
+                "Bar",
+                "Histogram",
+                "Time Series",
+                "Boxplot",
+                "Scatter",
+                "Donut",
+            ]
         )
         with tab_bar:
             col_x, col_y, col_color = generate_select_boxes(
@@ -210,7 +233,7 @@ if __name__ == "__main__":
                 )
 
         with tab_boxplot:
-            col_x, col_y = generate_select_boxes(
+            col_x, col_y, _ = generate_select_boxes(
                 options_x=cat_cols,
                 options_y=cont_cols,
                 options_color=None,
@@ -248,3 +271,15 @@ if __name__ == "__main__":
                 plot_scatter(df, mark, col_x, col_y, col_color)
             else:
                 st.warning("Please select values for both X and Y.")
+
+        with tab_donut:
+            _, _, col_color = generate_select_boxes(
+                options_x=None,
+                options_y=None,
+                options_color=cat_cols,
+                key_prefix="donut",
+            )
+            if col_color:
+                plot_donut(df, col_color)
+            else:
+                st.warning("Please select a value for Color.")

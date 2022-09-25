@@ -62,6 +62,7 @@ def plot_bar(
     )
 
 
+# TODO: Add 2D count view
 def plot_timeseries(
     df,
     mark,
@@ -246,6 +247,7 @@ def plot_scatter(df, mark, col_x, col_y, col_color=None):
         if col_color
         else []
     )
+    # TODO: Fix ordering when selecting legend
     config_layer = (
         {
             "opacity": {
@@ -280,6 +282,46 @@ def plot_scatter(df, mark, col_x, col_y, col_color=None):
                     "title": col_color.capitalize(),
                 },
                 **config_layer,
+            },
+        },
+    )
+
+
+def plot_donut(df, col_color):
+    st.vega_lite_chart(
+        data=df,
+        spec={
+            **CONFIG_MAIN,
+            "mark": {"type": "arc", "innerRadius": 100, **CONFIG_MARK},
+            "transform": [
+                {
+                    "window": [{"op": "count", "field": "mentions", "as": "total"}],
+                    "frame": [None, None],
+                },
+                {
+                    "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                    "groupby": [col_color],
+                },
+                {"calculate": "datum.groupcount/datum.total", "as": "share"},
+            ],
+            "encoding": {
+                "theta": {
+                    "type": "quantitative",
+                    "title": "Count",
+                    "aggregate": "count",
+                },
+                "color": {
+                    "field": col_color,
+                    "type": "nominal",
+                    "title": col_color.capitalize(),
+                },
+                "order": {
+                    "field": "share",
+                    "type": "quantitative",
+                    "sort": "descending",
+                    "title": "Share [%]",
+                    "format": ".1%",
+                },
             },
         },
     )
