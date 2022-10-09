@@ -2,13 +2,13 @@
 
 [Try the Online Demo](https://fdebrain-streamlit-vega-lite-charts-app-yjdqk5.streamlitapp.com/)
 
-Explore tabular datasets using Streamlit and Vega-Lite.
+Explore tabular datasets using [Streamlit](https://streamlit.io/) and [Vega-Lite](https://vega.github.io/vega-lite/).
 
 ## Requirements
 
 Python 3.10
 
-Poetry
+[Poetry](https://python-poetry.org/)
 
 ## Installation
 
