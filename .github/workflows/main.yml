@@ -30,4 +30,4 @@ jobs:
       - name: Flake8
         run: flake8 --max-line-length=90 .
       - name: isort
-        run: isort --profile=black --line_length=90 .
+        run: isort --profile=black --line-length=90 .
