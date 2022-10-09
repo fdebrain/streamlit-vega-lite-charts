@@ -36,3 +36,6 @@ jobs:
           use-black: true
           use-mypy: true
           use-isort: true
+          extra-flake8-options: "--max-line-length=90"
+          extra-black-options: "--line-length=90"
+          extra-isort-options: "--profile=black --line-length=90"
