@@ -8,6 +8,7 @@ authors = ["fdebrain <12777340+fdebrain@users.noreply.github.com>"]
 python = ">=3.10,<3.12"
 streamlit = "^1.12.2"
 scikit-learn = "^1.1.2"
+pre-commit = "^2.20.0"
 
 
 [tool.poetry.dev-dependencies]
