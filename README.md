@@ -25,4 +25,4 @@ Poetry
 - [x] Generate bar, histogram, timeseries, boxplot, scatter plots
 - [ ] Detecting datetime columns
 - [ ] Line, circular plots
-- [ ] Upload custom dataset 
+- [ ] Upload custom dataset
