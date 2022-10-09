@@ -26,6 +26,8 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
+      - uses: psf/black@stable
+
       - name: Python Code Quality and Lint
         uses: ricardochaves/python-lint@v1.3.0
         with:
@@ -33,9 +35,8 @@ jobs:
           use-pylint: false
           use-pycodestyle: false
           use-flake8: true
-          use-black: true
+          use-black: false
           use-mypy: true
           use-isort: true
           extra-flake8-options: "--max-line-length=90"
-          extra-black-options: "--line-length=90"
           extra-isort-options: "--profile=black --line-length=90"
