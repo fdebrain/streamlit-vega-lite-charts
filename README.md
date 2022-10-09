@@ -24,7 +24,7 @@ We use Black, Flake8 and isort to ensure standard coding practices.
 
 Each commit and pull request triggers a CI (Continuous Integration) pipeline job that runs code quality checks remotely (see Github Actions).
 
-**(Optional) Run linters locally: pre-commit run -a**
+**(Optional) Run linters locally:** pre-commit run -a
 
 ## Features
 
