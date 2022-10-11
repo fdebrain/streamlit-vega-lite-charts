@@ -1,4 +1,3 @@
-import pandas
 import streamlit as st
 
 CONFIG_MAIN = {
