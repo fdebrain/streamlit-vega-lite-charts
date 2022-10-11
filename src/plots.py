@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas
 
 CONFIG_MAIN = {
     "width": 600,
@@ -7,8 +8,7 @@ CONFIG_MAIN = {
 }
 
 
-CONFIG_MARK = {
-    "tooltip": True,
+CONFIG_MARK = {"tooltip": True,
     "stroke": 1,
     "strokeWidth": 0.5,
 }
@@ -18,14 +18,13 @@ def plot_bar(
     df,
     col_x,
     col_y=None,
-    col_color=None,
+    col_color=None ,
     agg=None,
     norm=False,
     group=False,
 ):
     config_norm = (
-        {
-            "stack": "normalize",
+        {"stack": "normalize",
             "format": ".1%",
             "axis": {"format": ".1%"},
         }
