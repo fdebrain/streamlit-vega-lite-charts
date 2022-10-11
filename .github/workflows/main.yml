@@ -19,7 +19,7 @@ jobs:
       - name: Black
         uses: psf/black@stable
         with:
-          options: "--check --verbose --line-length=90"
+          options: "--check --verbose --line-length=90 --diff"
           version: "~= 22.0"
       - name: Flake8 annotations
         uses: rbialon/flake8-annotations@v1
