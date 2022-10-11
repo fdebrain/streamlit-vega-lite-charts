@@ -325,3 +325,31 @@ def plot_donut(df, col_color):
             },
         },
     )
+
+def plot_line(df,col_x, col_y,col_color):
+    st.vega_lite_chart(
+        data= df,
+        spec={
+            "mark":{
+                "type":"line",
+                "interpolate": "linear",
+                } ,
+            "encoding": {
+                "x":{
+                    "field": col_x,
+                  
+                },
+                "y":{
+                    "field": col_y,
+                    
+                },
+                "color":{
+                    "field": col_color,
+                }
+                    
+            }
+        }
+        
+    )
+        
+    
