@@ -335,20 +335,12 @@ def plot_line(df, col_x, col_y, col_color):
             "mark": {
                 "type": "line",
                 "point": "true",
-                "tooltip": {"content": "data"},
+                "tooltip": True,
             },
             "encoding": {
-                "x": {
-                    "field": col_x,
-                    "type": "quantitative",
-                },
-                "y": {
-                    "field": col_y,
-                    "type": "quantitative",
-                },
-                "color": {
-                    "field": col_color,
-                },
+                "x": {"field": col_x, "type": "quantitative", "bin": True},
+                "y": {"field": col_y, "type": "quantitative", "aggregate": "mean"},
+                "color": {"field": col_color, "type": "nominal"},
             },
         },
     )
