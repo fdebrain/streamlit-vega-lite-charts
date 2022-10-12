@@ -9,6 +9,7 @@ from src.plots import (
     plot_box,
     plot_donut,
     plot_histo,
+    plot_line,
     plot_scatter,
     plot_timeseries,
 )
@@ -99,15 +100,16 @@ if __name__ == "__main__":
             st.json({"num": cont_cols, "cat": cat_cols, "datetime": datetime_cols})
 
         # Plot
-        tab_bar, tab_histo, tab_timeseries, tab_boxplot, tab_scatter, tab_donut = st.tabs(
-            [
-                "Bar",
-                "Histogram",
-                "Time Series",
-                "Boxplot",
-                "Scatter",
-                "Donut",
-            ]
+        (
+            tab_bar,
+            tab_histo,
+            tab_timeseries,
+            tab_boxplot,
+            tab_scatter,
+            tab_donut,
+            tab_line,
+        ) = st.tabs(
+            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter", "Donut", "Line"]
         )
         with tab_bar:
             col_x, col_y, col_color = generate_select_boxes(
@@ -283,3 +285,15 @@ if __name__ == "__main__":
                 plot_donut(df, col_color)
             else:
                 st.warning("Please select a value for Color.")
+
+        with tab_line:
+            col_x, col_y, col_color = generate_select_boxes(
+                options_x=cont_cols + datetime_cols,
+                options_y=cont_cols + datetime_cols,
+                options_color=cat_cols,
+                key_prefix="line",
+            )
+            if col_x and col_y:
+                plot_line(df, col_x, col_y, col_color)
+            else:
+                st.warning("Please select values for both X and Y.")

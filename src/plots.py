@@ -325,3 +325,22 @@ def plot_donut(df, col_color):
             },
         },
     )
+
+
+def plot_line(df, col_x, col_y, col_color):
+    st.vega_lite_chart(
+        data=df,
+        spec={
+            **CONFIG_MAIN,
+            "mark": {
+                "type": "line",
+                "point": "true",
+                "tooltip": True,
+            },
+            "encoding": {
+                "x": {"field": col_x, "type": "quantitative", "bin": True},
+                "y": {"field": col_y, "type": "quantitative", "aggregate": "mean"},
+                "color": {"field": col_color, "type": "nominal"},
+            },
+        },
+    )
