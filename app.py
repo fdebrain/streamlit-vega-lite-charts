@@ -153,12 +153,18 @@ if __name__ == "__main__":
             )
             bins = st.slider(label="Bins", min_value=1, max_value=100, value=10)
             ordinal = st.checkbox(label="Ordinal", value=False)
+            normalize = st.checkbox(label="Normalize", value=False)
 
             if not col_x:
                 st.warning("Please select a value for X.")
             elif not col_y and not col_color:
-                st.subheader("Simple histogram")
-                plot_histo(df, col_x=col_x, bin=bins, ordinal=ordinal)
+                if ordinal and normalize:
+                    st.warning("Please select only one (Ordinal or Normalize)")
+                else:
+                    st.subheader("Simple histogram")
+                    plot_histo(
+                        df, col_x=col_x, bin=bins, ordinal=ordinal, normalize=normalize
+                    )
             elif col_y and not col_color:
                 st.subheader("2D scatter histogram")
                 plot_2d_histo(
@@ -180,24 +186,31 @@ if __name__ == "__main__":
                     bin_y=bins,
                 )
             elif not col_y and col_color:
-                st.subheader("Stacked histogram")
-                plot_histo(
-                    df,
-                    col_x=col_x,
-                    col_color=col_color,
-                    bin=bins,
-                    ordinal=ordinal,
-                )
+                if normalize:
+                    st.warning(
+                        "Normalization doesn't work with Stacked/Layered Histogram"
+                    )
+                else:
+                    st.subheader("Stacked histogram")
+                    plot_histo(
+                        df,
+                        col_x=col_x,
+                        col_color=col_color,
+                        bin=bins,
+                        ordinal=ordinal,
+                        normalize=normalize,
+                    )
 
-                st.subheader("Layered histogram")
-                plot_histo(
-                    df,
-                    col_x=col_x,
-                    col_color=col_color,
-                    bin=bins,
-                    layered=True,
-                    ordinal=ordinal,
-                )
+                    st.subheader("Layered histogram")
+                    plot_histo(
+                        df,
+                        col_x=col_x,
+                        col_color=col_color,
+                        bin=bins,
+                        layered=True,
+                        ordinal=ordinal,
+                        normalize=normalize,
+                    )
             else:
                 st.warning("You cannot select Y and Color at the same time.")
 
