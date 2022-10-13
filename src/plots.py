@@ -118,7 +118,6 @@ def plot_timeseries(
 def plot_histo(
     df,
     col_x,
-    col_y=None,
     col_color=None,
     ordinal=False,
     bin=None,
@@ -159,6 +158,7 @@ def plot_histo(
             "mark": {"type": "bar", **CONFIG_MARK, "blend": "normal", "binSpacing": 0},
             "params": config_params,
             "transform": [
+                {"filter": f"datum.{col_x} != null"},  # Ignore NaNs
                 {"bin": config_bin, "field": col_x, "as": "bin_col_x"},
                 {
                     "aggregate": [{"op": "count", "as": "xCount"}],
@@ -177,15 +177,11 @@ def plot_histo(
                     "bin": {"maxbins": bin, "binned": True} if normalize else config_bin,
                     "title": col_x.capitalize(),
                 },
-                "x2": {
-                    "field": "bin_col_x_end",
-                }
-                if normalize
-                else {},
+                "x2": {"field": "bin_col_x_end"} if normalize else {},
                 "y": {
-                    "field": "PercentOfTotal" if normalize else col_y,
+                    "field": "PercentOfTotal" if normalize else None,
                     "type": "quantitative",
-                    "aggregate": "" if normalize else "count",
+                    "aggregate": None if normalize else "count",
                     "title": "Relative Frequency" if normalize else "Count",
                     "stack": None if layered else "zero",
                     "axis": {"format": ".1~%"} if normalize else {},
@@ -312,7 +308,7 @@ def plot_donut(df, col_color):
             "mark": {"type": "arc", "innerRadius": 100, **CONFIG_MARK},
             "transform": [
                 {
-                    "window": [{"op": "count", "field": "mentions", "as": "total"}],
+                    "window": [{"op": "count", "as": "total"}],
                     "frame": [None, None],
                 },
                 {
