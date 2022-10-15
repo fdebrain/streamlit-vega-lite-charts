@@ -114,6 +114,7 @@ def plot_timeseries(
         },
     )
 
+
 def plot_series_heatmap(
     df,
     col_x,
@@ -125,15 +126,7 @@ def plot_series_heatmap(
     st.vega_lite_chart(
         data=df,
         spec={
-            "config": {
-                "view": {
-                    "strokeWidth": 0,
-                    "step": 13
-                },
-                "axis": {
-                    "domain": False
-                }
-            },
+            "config": {"view": {"strokeWidth": 0, "step": 13}, "axis": {"domain": False}},
             **CONFIG_MAIN,
             "mark": {"type": "rect", "tooltip": True},
             "encoding": {
@@ -144,23 +137,21 @@ def plot_series_heatmap(
                     "title": f"{unit_x}",
                     "axis": {
                         "labelAngle": -45,
-                    }
+                    },
                 },
                 "y": {
                     "field": col_x,
                     "timeUnit": unit_y,
                     "type": "ordinal",
-                    "title": f"{unit_y}"
+                    "title": f"{unit_y}",
                 },
                 "color": {
                     "field": col_y,
                     "aggregate": agg,
                     "type": "quantitative",
-                    "legend": {
-                        "title": f"{col_y}"
-                    }
-                }
-            }
+                    "legend": {"title": f"{col_y}"},
+                },
+            },
         },
     )
 
