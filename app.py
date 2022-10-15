@@ -1,3 +1,4 @@
+from pickle import FALSE
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -12,6 +13,7 @@ from src.plots import (
     plot_line,
     plot_scatter,
     plot_timeseries,
+    plot_series_heatmap,
 )
 
 DATASET_LIST = ["titanic", "iris", "diabetes", "wine", "sonar"]
@@ -209,6 +211,13 @@ if __name__ == "__main__":
                 key_prefix="series",
             )
             units = st.selectbox(label="Time scale", options=TIME_SCALES)
+            agg = st.selectbox(label="Aggregation method", options=["mean", "median", "max", "min"])
+            ht_scale = st.selectbox(label="Heatmap time scale", options=["Month v/s Day", "Day v/s Hour", "Month v/s Year"])
+            ht_units = {
+                "Month v/s Day": ["date", "month"], 
+                "Day v/s Hour": ["hours", "date"], 
+                "Month v/s Year": ["year", "month"]
+            }
             mark = st.radio(label="Mark type", options=["line", "bar"], horizontal=True)
             if not col_x:
                 st.warning("Please select a value for X.")
@@ -232,6 +241,15 @@ if __name__ == "__main__":
                     col_y=col_y,
                     col_color=col_color,
                     agg="mean",
+                )
+                st.header("Heatmap series plot")
+                plot_series_heatmap(
+                    df,
+                    col_x=col_x,
+                    col_y=col_y,
+                    unit_x=ht_units[ht_scale][0],
+                    unit_y=ht_units[ht_scale][1],
+                    agg=agg
                 )
 
         with tab_boxplot:

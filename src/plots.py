@@ -114,6 +114,56 @@ def plot_timeseries(
         },
     )
 
+def plot_series_heatmap(
+    df,
+    col_x,
+    col_y,
+    agg="mean",
+    unit_x="date",
+    unit_y="month",
+):
+    st.vega_lite_chart(
+        data=df,
+        spec={
+            "config": {
+                "view": {
+                    "strokeWidth": 0,
+                    "step": 13
+                },
+                "axis": {
+                    "domain": False
+                }
+            },
+            **CONFIG_MAIN,
+            "mark": {"type": "rect", "tooltip": True},
+            "encoding": {
+                "x": {
+                    "field": col_x,
+                    "timeUnit": unit_x,
+                    "type": "ordinal",
+                    "title": f"{unit_x}",
+                    "axis": {
+                        "labelAngle": -45,
+                    }
+                },
+                "y": {
+                    "field": col_x,
+                    "timeUnit": unit_y,
+                    "type": "ordinal",
+                    "title": f"{unit_y}"
+                },
+                "color": {
+                    "field": col_y,
+                    "aggregate": agg,
+                    "type": "quantitative",
+                    "legend": {
+                        "title": f"{col_y}"
+                    }
+                }
+            }
+        },
+    )
+
 
 def plot_histo(
     df,
