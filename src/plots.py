@@ -224,27 +224,39 @@ def plot_histo(
     )
 
 
-def plot_2d_histo(df, mark, col_x, col_y, bin_x, bin_y):
+def plot_2d_histo(df, mark, col_x, col_y, bin_x, bin_y, ordinal):
     st.vega_lite_chart(
         data=df,
         spec={
             **CONFIG_MAIN,
-            "mark": {"type": mark, **CONFIG_MARK},
+            "config": {
+                "axis": {
+                    "grid": True,
+                    "tickBand": "extent",
+                    "gridColor": "black",
+                    "gridWidth": 0.5,
+                }
+                if mark == "rect"
+                else {}
+            },
+            "mark": {"type": mark, "tooltip": True},
             "encoding": {
                 "x": {
                     "field": col_x,
                     "bin": {"maxbins": bin_x},
                     "title": col_x.capitalize(),
+                    "type": "ordinal" if ordinal else "quantitative",
                 },
                 "y": {
                     "field": col_y,
                     "bin": {"maxbins": bin_y},
                     "title": col_y.capitalize(),
+                    "type": "ordinal" if ordinal else "quantitative",
+                    "sort": "-y",
                 },
                 "size": {"aggregate": "count"},
                 "color": {"aggregate": "count"} if mark == "rect" else {},
             },
-            "config": {"view": {"stroke": "transparent"}} if mark == "rect" else {},
         },
     )
 

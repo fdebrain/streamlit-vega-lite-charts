@@ -169,6 +169,7 @@ if __name__ == "__main__":
                     col_y=col_y,
                     bin_x=bins,
                     bin_y=bins,
+                    ordinal=ordinal,
                 )
 
                 st.subheader("2D heatmap histogram")
@@ -179,6 +180,7 @@ if __name__ == "__main__":
                     col_y=col_y,
                     bin_x=bins,
                     bin_y=bins,
+                    ordinal=ordinal,
                 )
             elif not col_y and col_color:
                 st.subheader("Stacked histogram")
