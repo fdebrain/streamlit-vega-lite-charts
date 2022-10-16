@@ -249,8 +249,8 @@ if __name__ == "__main__":
                 st.header("Heatmap series plot")
                 plot_series_heatmap(
                     df,
-                    col_x=col_x,
-                    col_y=col_y,
+                    col_date=col_x,
+                    col_color=col_y,
                     unit_x=ht_units[ht_scale][0],
                     unit_y=ht_units[ht_scale][1],
                     agg=agg,

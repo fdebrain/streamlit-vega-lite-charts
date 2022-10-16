@@ -117,8 +117,8 @@ def plot_timeseries(
 
 def plot_series_heatmap(
     df,
-    col_x,
-    col_y,
+    col_date,
+    col_color,
     agg="mean",
     unit_x="date",
     unit_y="month",
@@ -126,30 +126,33 @@ def plot_series_heatmap(
     st.vega_lite_chart(
         data=df,
         spec={
-            "config": {"view": {"strokeWidth": 0, "step": 13}, "axis": {"domain": False}},
-            **CONFIG_MAIN,
+            "config": {
+                "axis": {
+                    "grid": True,
+                    "tickBand": "extent",
+                    "gridColor": "black",
+                    "gridWidth": 0.5,
+                }
+            },
             "mark": {"type": "rect", "tooltip": True},
             "encoding": {
                 "x": {
-                    "field": col_x,
+                    "field": col_date,
                     "timeUnit": unit_x,
                     "type": "ordinal",
-                    "title": f"{unit_x}",
-                    "axis": {
-                        "labelAngle": -45,
-                    },
+                    "title": unit_x.capitalize(),
                 },
                 "y": {
-                    "field": col_x,
+                    "field": col_date,
                     "timeUnit": unit_y,
                     "type": "ordinal",
-                    "title": f"{unit_y}",
+                    "title": unit_y.capitalize(),
                 },
                 "color": {
-                    "field": col_y,
+                    "field": col_color,
                     "aggregate": agg,
                     "type": "quantitative",
-                    "legend": {"title": f"{col_y}"},
+                    "legend": {"title": col_color.capitalize()},
                 },
             },
         },
