@@ -212,18 +212,6 @@ if __name__ == "__main__":
                 key_prefix="series",
             )
             units = st.selectbox(label="Time scale", options=TIME_SCALES)
-            agg = st.selectbox(
-                label="Aggregation method", options=["mean", "median", "max", "min"]
-            )
-            ht_scale = st.selectbox(
-                label="Heatmap time scale",
-                options=["Month v/s Day", "Day v/s Hour", "Month v/s Year"],
-            )
-            ht_units = {
-                "Month v/s Day": ["date", "month"],
-                "Day v/s Hour": ["hours", "date"],
-                "Month v/s Year": ["year", "month"],
-            }
             mark = st.radio(label="Mark type", options=["line", "bar"], horizontal=True)
             if not col_x:
                 st.warning("Please select a value for X.")
@@ -238,7 +226,12 @@ if __name__ == "__main__":
                     agg="count",
                 )
             else:
-                st.header("Mean series plot")
+                st.header("Aggregated series plot")
+                agg = st.selectbox(
+                    label="Aggregation method",
+                    options=["mean", "median", "max", "min"],
+                    key="agg_time_series",
+                )
                 plot_timeseries(
                     df,
                     mark=mark,
@@ -246,16 +239,30 @@ if __name__ == "__main__":
                     col_x=col_x,
                     col_y=col_y,
                     col_color=col_color,
-                    agg="mean",
+                    agg=agg,
                 )
                 st.header("Heatmap series plot")
+                agg_heat = st.selectbox(
+                    label="Aggregation method",
+                    options=["mean", "median", "max", "min"],
+                    key="agg_time_series_heat",
+                )
+                ht_scale = st.selectbox(
+                    label="Heatmap time scale",
+                    options=["Month v/s Day", "Day v/s Hour", "Month v/s Year"],
+                )
+                ht_units = {
+                    "Month v/s Day": ["date", "month"],
+                    "Day v/s Hour": ["hours", "date"],
+                    "Month v/s Year": ["year", "month"],
+                }
                 plot_series_heatmap(
                     df,
                     col_date=col_x,
                     col_color=col_y,
                     unit_x=ht_units[ht_scale][0],
                     unit_y=ht_units[ht_scale][1],
-                    agg=agg,
+                    agg=agg_heat,
                 )
 
         with tab_boxplot:
