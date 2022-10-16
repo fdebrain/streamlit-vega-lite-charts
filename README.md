@@ -1,6 +1,6 @@
 # Streamlit Vega-Lite Charts
 
-[Try the Online Demo](https://fdebrain-streamlit-vega-lite-charts-app-yjdqk5.streamlitapp.com/)
+[Try the Online Demo](https://vega-lite-charts.streamlitapp.com/)
 
 Explore tabular datasets using [Streamlit](https://streamlit.io/) and [Vega-Lite](https://vega.github.io/vega-lite/).
 
