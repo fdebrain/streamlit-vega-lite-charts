@@ -153,11 +153,11 @@ if __name__ == "__main__":
                 key_prefix="histo",
             )
             bins = st.slider(label="Bins", min_value=1, max_value=100, value=10)
+            ordinal = st.checkbox(label="Ordinal", value=False)
 
             if not col_x:
                 st.warning("Please select a value for X.")
             elif not col_y and not col_color:
-                ordinal = st.checkbox(label="Ordinal", value=False)
                 normalize = st.checkbox(label="Normalize", value=False)
 
                 if ordinal and normalize:
@@ -194,7 +194,6 @@ if __name__ == "__main__":
                     ordinal=ordinal,
                 )
             elif not col_y and col_color:
-                ordinal = st.checkbox(label="Ordinal", value=False)
                 st.subheader("Stacked histogram")
                 plot_histo(
                     df,
