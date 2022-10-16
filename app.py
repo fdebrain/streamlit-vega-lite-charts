@@ -11,6 +11,7 @@ from src.plots import (
     plot_histo,
     plot_line,
     plot_scatter,
+    plot_series_heatmap,
     plot_timeseries,
 )
 
@@ -152,11 +153,11 @@ if __name__ == "__main__":
                 key_prefix="histo",
             )
             bins = st.slider(label="Bins", min_value=1, max_value=100, value=10)
+            ordinal = st.checkbox(label="Ordinal", value=False)
 
             if not col_x:
                 st.warning("Please select a value for X.")
             elif not col_y and not col_color:
-                ordinal = st.checkbox(label="Ordinal", value=False)
                 normalize = st.checkbox(label="Normalize", value=False)
 
                 if ordinal and normalize:
@@ -179,6 +180,7 @@ if __name__ == "__main__":
                     col_y=col_y,
                     bin_x=bins,
                     bin_y=bins,
+                    ordinal=ordinal,
                 )
 
                 st.subheader("2D heatmap histogram")
@@ -189,9 +191,9 @@ if __name__ == "__main__":
                     col_y=col_y,
                     bin_x=bins,
                     bin_y=bins,
+                    ordinal=ordinal,
                 )
             elif not col_y and col_color:
-                ordinal = st.checkbox(label="Ordinal", value=False)
                 st.subheader("Stacked histogram")
                 plot_histo(
                     df,
@@ -235,7 +237,12 @@ if __name__ == "__main__":
                     agg="count",
                 )
             else:
-                st.header("Mean series plot")
+                st.header("Aggregated series plot")
+                agg = st.selectbox(
+                    label="Aggregation method",
+                    options=["mean", "median", "max", "min"],
+                    key="agg_time_series",
+                )
                 plot_timeseries(
                     df,
                     mark=mark,
@@ -243,7 +250,30 @@ if __name__ == "__main__":
                     col_x=col_x,
                     col_y=col_y,
                     col_color=col_color,
-                    agg="mean",
+                    agg=agg,
+                )
+                st.header("Heatmap series plot")
+                agg_heat = st.selectbox(
+                    label="Aggregation method",
+                    options=["mean", "median", "max", "min"],
+                    key="agg_time_series_heat",
+                )
+                ht_scale = st.selectbox(
+                    label="Heatmap time scale",
+                    options=["Month v/s Day", "Day v/s Hour", "Month v/s Year"],
+                )
+                ht_units = {
+                    "Month v/s Day": ["date", "month"],
+                    "Day v/s Hour": ["hours", "date"],
+                    "Month v/s Year": ["year", "month"],
+                }
+                plot_series_heatmap(
+                    df,
+                    col_date=col_x,
+                    col_color=col_y,
+                    unit_x=ht_units[ht_scale][0],
+                    unit_y=ht_units[ht_scale][1],
+                    agg=agg_heat,
                 )
 
         with tab_boxplot:

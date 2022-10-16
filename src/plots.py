@@ -115,6 +115,50 @@ def plot_timeseries(
     )
 
 
+def plot_series_heatmap(
+    df,
+    col_date,
+    col_color,
+    agg="mean",
+    unit_x="date",
+    unit_y="month",
+):
+    st.vega_lite_chart(
+        data=df,
+        spec={
+            "config": {
+                "axis": {
+                    "grid": True,
+                    "tickBand": "extent",
+                    "gridColor": "black",
+                    "gridWidth": 0.5,
+                }
+            },
+            "mark": {"type": "rect", "tooltip": True},
+            "encoding": {
+                "x": {
+                    "field": col_date,
+                    "timeUnit": unit_x,
+                    "type": "ordinal",
+                    "title": unit_x.capitalize(),
+                },
+                "y": {
+                    "field": col_date,
+                    "timeUnit": unit_y,
+                    "type": "ordinal",
+                    "title": unit_y.capitalize(),
+                },
+                "color": {
+                    "field": col_color,
+                    "aggregate": agg,
+                    "type": "quantitative",
+                    "legend": {"title": col_color.capitalize()},
+                },
+            },
+        },
+    )
+
+
 def plot_histo(
     df,
     col_x,
@@ -193,27 +237,39 @@ def plot_histo(
     )
 
 
-def plot_2d_histo(df, mark, col_x, col_y, bin_x, bin_y):
+def plot_2d_histo(df, mark, col_x, col_y, bin_x, bin_y, ordinal):
     st.vega_lite_chart(
         data=df,
         spec={
             **CONFIG_MAIN,
-            "mark": {"type": mark, **CONFIG_MARK},
+            "config": {
+                "axis": {
+                    "grid": True,
+                    "tickBand": "extent",
+                    "gridColor": "black",
+                    "gridWidth": 0.5,
+                }
+                if mark == "rect"
+                else {}
+            },
+            "mark": {"type": mark, "tooltip": True},
             "encoding": {
                 "x": {
                     "field": col_x,
                     "bin": {"maxbins": bin_x},
                     "title": col_x.capitalize(),
+                    "type": "ordinal" if ordinal else "quantitative",
                 },
                 "y": {
                     "field": col_y,
                     "bin": {"maxbins": bin_y},
                     "title": col_y.capitalize(),
+                    "type": "ordinal" if ordinal else "quantitative",
+                    "sort": "-y",
                 },
                 "size": {"aggregate": "count"},
                 "color": {"aggregate": "count"} if mark == "rect" else {},
             },
-            "config": {"view": {"stroke": "transparent"}} if mark == "rect" else {},
         },
     )
 
