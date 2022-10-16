@@ -162,11 +162,11 @@ def plot_series_heatmap(
 def plot_histo(
     df,
     col_x,
-    col_y=None,
     col_color=None,
     ordinal=False,
     bin=None,
     layered=False,
+    normalize=False,
 ):
     config_bin = {"maxbins": bin} if bin else True
     config_params = (
@@ -195,27 +195,40 @@ def plot_histo(
         if layered
         else {}
     )
-
     st.vega_lite_chart(
         data=df,
         spec={
             **CONFIG_MAIN,
-            "mark": {"type": "bar", **CONFIG_MARK, "blend": "normal"},
+            "mark": {"type": "bar", **CONFIG_MARK, "blend": "normal", "binSpacing": 0},
             "params": config_params,
+            "transform": [
+                {"filter": f"datum.{col_x} != null"},  # Ignore NaNs
+                {"bin": config_bin, "field": col_x, "as": "bin_col_x"},
+                {
+                    "aggregate": [{"op": "count", "as": "xCount"}],
+                    "groupby": ["bin_col_x", "bin_col_x_end"],
+                },
+                {"joinaggregate": [{"op": "sum", "field": "xCount", "as": "TotalCount"}]},
+                {"calculate": "datum.xCount/datum.TotalCount", "as": "PercentOfTotal"},
+            ]
+            if normalize
+            else [],
             "encoding": {
                 "x": {
-                    "field": col_x,
+                    "field": "bin_col_x" if normalize else col_x,
                     "type": "ordinal" if ordinal else "quantitative",
                     "axis": {"labelAngle": -45 if ordinal else 0},
-                    "bin": config_bin,
+                    "bin": {"maxbins": bin, "binned": True} if normalize else config_bin,
                     "title": col_x.capitalize(),
                 },
+                "x2": {"field": "bin_col_x_end"} if normalize else {},
                 "y": {
-                    "field": col_y,
+                    "field": "PercentOfTotal" if normalize else None,
                     "type": "quantitative",
-                    "aggregate": "count",
-                    "title": "Count",
+                    "aggregate": None if normalize else "count",
+                    "title": "Relative Frequency" if normalize else "Count",
                     "stack": None if layered else "zero",
+                    "axis": {"format": ".1~%"} if normalize else {},
                 },
                 "color": {"field": col_color, "type": "nominal"},
                 **config_layer,
@@ -351,7 +364,7 @@ def plot_donut(df, col_color):
             "mark": {"type": "arc", "innerRadius": 100, **CONFIG_MARK},
             "transform": [
                 {
-                    "window": [{"op": "count", "field": "mentions", "as": "total"}],
+                    "window": [{"op": "count", "as": "total"}],
                     "frame": [None, None],
                 },
                 {
