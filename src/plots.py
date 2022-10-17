@@ -356,7 +356,7 @@ def plot_scatter(df, mark, col_x, col_y, col_color=None):
     )
 
 
-def plot_donut(df, col_color):
+def plot_donut_simple(df, col_color):
     st.vega_lite_chart(
         data=df,
         spec={
@@ -395,6 +395,79 @@ def plot_donut(df, col_color):
         },
     )
 
+def plot_donut_complex(df, col_color_1, col_color_2):
+    st.vega_lite_chart(
+        data=df,
+        spec={
+            "layer": [{
+                **CONFIG_MAIN,
+                "mark": {"type": "arc", "innerRadius": 75, "radius": 150, **CONFIG_MARK},
+                "transform": [
+                    {
+                        "window": [{"op": "count", "as": "total"}],
+                        "frame": [None, None],
+                    },
+                    {
+                        "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                        "groupby": [col_color_1],
+                    },
+                    {"calculate": "datum.groupcount/datum.total", "as": "share"},
+                ],
+                "encoding": {
+                    "theta": {
+                        "type": "quantitative",
+                        "title": "Count",
+                        "aggregate": "count",
+                    },
+                    "color": {
+                        "field": col_color_1,
+                        "type": "nominal",
+                        "title": col_color_1.capitalize(),
+                    },
+                    "order": {
+                        "field": "share",
+                        "type": "quantitative",
+                        "sort": "descending",
+                        "title": "Share [%]",
+                        "format": ".1%",
+                    },
+                },
+            }, 
+            {
+                "mark": {"type": "arc", "innerRadius": 125, "radius": 175, **CONFIG_MARK},
+                "transform": [
+                    {
+                        "window": [{"op": "count", "as": "total"}],
+                        "frame": [None, None],
+                    },
+                    {
+                        "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                        "groupby": [col_color_2],
+                    },
+                    {"calculate": "datum.groupcount/datum.total", "as": "share"},
+                ],
+                "encoding": {
+                    "theta": {
+                        "type": "quantitative",
+                        "title": "Count",
+                        "aggregate": "count",
+                    },
+                    "color": {
+                        "field": col_color_2,
+                        "type": "nominal",
+                        "title": col_color_2.capitalize(),
+                    },
+                    "order": {
+                        "field": "share",
+                        "type": "quantitative",
+                        "sort": "descending",
+                        "title": "Share [%]",
+                        "format": ".1%",
+                    },
+                },
+            }]
+        },
+    )
 
 def plot_line(df, col_x, col_y, col_color):
     st.vega_lite_chart(
