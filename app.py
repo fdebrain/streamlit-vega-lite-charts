@@ -29,6 +29,7 @@ TIME_SCALES = [
     "monthdate",
     "yearmonthdate",
 ]
+MSG_SELECT_VALUE_X = "Please select a value for X."
 
 
 @st.experimental_memo
@@ -42,8 +43,8 @@ def get_data(name):
     )
 
 
-def generate_select_boxes(options_x, options_y, options_color_1, options_color_2, key_prefix):
-    select_boxes = [None, None, None, None]
+def generate_select_boxes(options_x, options_y, options_color, key_prefix):
+    select_boxes = [None, None, None]
     if options_x:
         col_x = st.selectbox(
             label="X",
@@ -60,21 +61,14 @@ def generate_select_boxes(options_x, options_y, options_color_1, options_color_2
         )
         select_boxes[1] = col_y
 
-    if options_color_1:
-        col_color_1 = st.selectbox(
+    if options_color:
+        col_color = st.selectbox(
             label="Color",
-            options=[""] + options_color_1,
-            key=f"{key_prefix}_color1",
+            options=[""] + options_color,
+            key=f"{key_prefix}_color",
         )
-        select_boxes[2] = col_color_1
+        select_boxes[2] = col_color
 
-    if options_color_2:
-        col_color_2 = st.selectbox(
-            label="Second Color",
-            options=[""] + options_color_2,
-            key=f"{key_prefix}_color2",
-        )
-        select_boxes[3] = col_color_2
     return select_boxes
 
 
@@ -116,23 +110,23 @@ if __name__ == "__main__":
             tab_timeseries,
             tab_boxplot,
             tab_scatter,
-            tab_donut_1,
-            tab_donut_2,
+            tab_donut_simple,
+            tab_donut_complex,
             tab_line,
         ) = st.tabs(
-            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter", "Donut Simple", "Donut Complex", "Line"]
+            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter",
+                "Donut Simple", "Donut Complex", "Line"]
         )
         with tab_bar:
-            col_x, col_y, col_color_1, _ = generate_select_boxes(
+            col_x, col_y, col_color = generate_select_boxes(
                 options_x=cat_cols,
                 options_y=cont_cols,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="bar",
             )
 
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y and not col_color:
                 st.subheader("Count bar plot")
                 plot_bar(df, col_x=col_x, agg="count")
@@ -157,18 +151,17 @@ if __name__ == "__main__":
                 )
 
         with tab_histo:
-            col_x, col_y, col_color_1, _ = generate_select_boxes(
+            col_x, col_y, col_color = generate_select_boxes(
                 options_x=cont_cols,
                 options_y=cont_cols + cat_cols,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="histo",
             )
             bins = st.slider(label="Bins", min_value=1, max_value=100, value=10)
             ordinal = st.checkbox(label="Ordinal", value=False)
 
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y and not col_color:
                 normalize = st.checkbox(label="Normalize", value=False)
 
@@ -228,17 +221,16 @@ if __name__ == "__main__":
                 st.warning("You cannot select Y and Color at the same time.")
 
         with tab_timeseries:
-            col_x, col_y, col_color_1, _ = generate_select_boxes(
+            col_x, col_y, col_color = generate_select_boxes(
                 options_x=datetime_cols,
                 options_y=cont_cols,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="series",
             )
             units = st.selectbox(label="Time scale", options=TIME_SCALES)
             mark = st.radio(label="Mark type", options=["line", "bar"], horizontal=True)
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y:
                 st.subheader("Count series plot")
                 plot_timeseries(
@@ -290,11 +282,10 @@ if __name__ == "__main__":
                 )
 
         with tab_boxplot:
-            col_x, col_y, _, _ = generate_select_boxes(
+            col_x, col_y, _ = generate_select_boxes(
                 options_x=cat_cols,
                 options_y=cont_cols,
-                options_color_1=None,
-                options_color_2=None,
+                options_color=None,
                 key_prefix="box",
             )
             zero = st.checkbox(label="Zero", value=True)
@@ -313,11 +304,10 @@ if __name__ == "__main__":
                 st.warning("Please select a value for Y.")
 
         with tab_scatter:
-            col_x, col_y, col_color_1, _ = generate_select_boxes(
+            col_x, col_y, col_color_1 = generate_select_boxes(
                 options_x=cont_cols,
                 options_y=cont_cols,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="scatter",
             )
             mark = st.radio(
@@ -331,12 +321,11 @@ if __name__ == "__main__":
             else:
                 st.warning("Please select values for both X and Y.")
 
-        with tab_donut_1:
-            _, _, col_color, _ = generate_select_boxes(
+        with tab_donut_simple:
+            _, _, col_color = generate_select_boxes(
                 options_x=None,
                 options_y=None,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="sdonut",
             )
             if col_color:
@@ -344,25 +333,28 @@ if __name__ == "__main__":
             else:
                 st.warning("Please select a value for Color.")
 
-        with tab_donut_2:
-            _, _, col_color_1, col_color_2 = generate_select_boxes(
+        with tab_donut_complex:
+            _, _, col_color = generate_select_boxes(
                 options_x=None,
                 options_y=None,
-                options_color_1=cat_cols,
-                options_color_2=cat_cols,
+                options_color=cat_cols,
                 key_prefix="cdonut",
             )
-            if col_color_1 and col_color_2:
-                plot_donut_complex(df, col_color_1, col_color_2)
+            col_color_2 = st.selectbox(
+                label="Second Color",
+                options=[""] + cat_cols,
+                key="cdonut_color2",
+            )
+            if col_color and col_color_2:
+                plot_donut_complex(df, col_color, col_color_2)
             else:
                 st.warning("Please select a value for both Colors.")
 
         with tab_line:
-            col_x, col_y, col_color, _ = generate_select_boxes(
+            col_x, col_y, col_color = generate_select_boxes(
                 options_x=cont_cols + datetime_cols,
                 options_y=cont_cols + datetime_cols,
-                options_color_1=cat_cols,
-                options_color_2=None,
+                options_color=cat_cols,
                 key_prefix="line",
             )
             if col_x and col_y:

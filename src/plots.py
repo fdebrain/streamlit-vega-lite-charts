@@ -13,6 +13,8 @@ CONFIG_MARK = {
     "strokeWidth": 0.5,
 }
 
+ATT_DATA_NUM_GROUP = "datum.groupcount/datum.total"
+
 
 def plot_bar(
     df,
@@ -371,7 +373,7 @@ def plot_donut_simple(df, col_color):
                     "joinaggregate": [{"op": "count", "as": "groupcount"}],
                     "groupby": [col_color],
                 },
-                {"calculate": "datum.groupcount/datum.total", "as": "share"},
+                {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
             ],
             "encoding": {
                 "theta": {
@@ -395,6 +397,7 @@ def plot_donut_simple(df, col_color):
         },
     )
 
+
 def plot_donut_complex(df, col_color_1, col_color_2):
     st.vega_lite_chart(
         data=df,
@@ -411,7 +414,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                         "joinaggregate": [{"op": "count", "as": "groupcount"}],
                         "groupby": [col_color_1],
                     },
-                    {"calculate": "datum.groupcount/datum.total", "as": "share"},
+                    {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
                 ],
                 "encoding": {
                     "theta": {
@@ -432,8 +435,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                         "format": ".1%",
                     },
                 },
-            }, 
-            {
+            }, {
                 "mark": {"type": "arc", "innerRadius": 125, "radius": 175, **CONFIG_MARK},
                 "transform": [
                     {
@@ -444,7 +446,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                         "joinaggregate": [{"op": "count", "as": "groupcount"}],
                         "groupby": [col_color_2],
                     },
-                    {"calculate": "datum.groupcount/datum.total", "as": "share"},
+                    {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
                 ],
                 "encoding": {
                     "theta": {
@@ -468,6 +470,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
             }]
         },
     )
+
 
 def plot_line(df, col_x, col_y, col_color):
     st.vega_lite_chart(
