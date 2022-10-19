@@ -304,7 +304,7 @@ if __name__ == "__main__":
                 st.warning("Please select a value for Y.")
 
         with tab_scatter:
-            col_x, col_y, col_color_1 = generate_select_boxes(
+            col_x, col_y, col_color = generate_select_boxes(
                 options_x=cont_cols,
                 options_y=cont_cols,
                 options_color=cat_cols,

@@ -402,8 +402,8 @@ def plot_donut_complex(df, col_color_1, col_color_2):
     st.vega_lite_chart(
         data=df,
         spec={
+            **CONFIG_MAIN,
             "layer": [{
-                **CONFIG_MAIN,
                 "mark": {"type": "arc", "innerRadius": 75, "radius": 150, **CONFIG_MARK},
                 "transform": [
                     {
@@ -412,7 +412,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                     },
                     {
                         "joinaggregate": [{"op": "count", "as": "groupcount"}],
-                        "groupby": [col_color_1],
+                        "groupby": [col_color_1, col_color_2],
                     },
                     {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
                 ],
@@ -444,7 +444,7 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                     },
                     {
                         "joinaggregate": [{"op": "count", "as": "groupcount"}],
-                        "groupby": [col_color_2],
+                        "groupby": [col_color_1, col_color_2],
                     },
                     {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
                 ],
