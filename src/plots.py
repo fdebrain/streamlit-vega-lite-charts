@@ -404,11 +404,12 @@ def plot_donut_complex(df, col_color_1, col_color_2):
         spec={
             **CONFIG_MAIN,
             "layer": [
+                # Inner donut
                 {
                     "mark": {
                         "type": "arc",
                         "innerRadius": 75,
-                        "radius": 150,
+                        "outerRadius": 125,
                         **CONFIG_MARK,
                     },
                     "transform": [
@@ -418,9 +419,9 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                         },
                         {
                             "joinaggregate": [{"op": "count", "as": "groupcount"}],
-                            "groupby": [col_color_1, col_color_2],
+                            "groupby": [col_color_1],
                         },
-                        {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
+                        {"calculate": "datum.groupcount/datum.total", "as": "share"},
                     ],
                     "encoding": {
                         "theta": {
@@ -433,20 +434,19 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                             "type": "nominal",
                             "title": col_color_1.capitalize(),
                         },
-                        "order": {
-                            "field": "share",
-                            "type": "quantitative",
-                            "sort": "descending",
-                            "title": "Share [%]",
-                            "format": ".1%",
-                        },
+                        "tooltip": [
+                            {"field": col_color_1},
+                            {"field": "groupcount", "title": "Count"},
+                            {"field": "share", "title": "Share [%]", "format": ".1%"},
+                        ],
                     },
                 },
+                # Outer donut
                 {
                     "mark": {
                         "type": "arc",
                         "innerRadius": 125,
-                        "radius": 175,
+                        "outerRadius": 160,
                         **CONFIG_MARK,
                     },
                     "transform": [
@@ -455,32 +455,36 @@ def plot_donut_complex(df, col_color_1, col_color_2):
                             "frame": [None, None],
                         },
                         {
-                            "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                            "joinaggregate": [{"op": "count", "as": "groupcount2"}],
                             "groupby": [col_color_1, col_color_2],
                         },
-                        {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
+                        {"calculate": "datum.groupcount2/datum.total", "as": "share2"},
                     ],
                     "encoding": {
                         "theta": {
                             "type": "quantitative",
                             "title": "Count",
                             "aggregate": "count",
-                        },
-                        "color": {
-                            "field": col_color_2,
-                            "type": "nominal",
-                            "title": col_color_2.capitalize(),
-                        },
-                        "order": {
-                            "field": "share",
-                            "type": "quantitative",
                             "sort": "descending",
-                            "title": "Share [%]",
-                            "format": ".1%",
                         },
+                        # Apply same color as col_color_1 but with gradient
+                        "color": {
+                            "field": col_color_1,
+                            "type": "nominal",
+                            "scale": {"field": col_color_2},
+                            "legend": None,
+                        },
+                        "opacity": {"field": "share2", "legend": None},
+                        "tooltip": [
+                            {"field": col_color_2},
+                            {"field": "groupcount2", "title": "Count"},
+                            {"field": "share2", "title": "Share [%]", "format": ".1%"},
+                        ],
                     },
                 },
             ],
+            # Allow outer donut to have different colors
+            "resolve": {"scale": {"color": "independent"}},
         },
     )
 
