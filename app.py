@@ -7,8 +7,8 @@ from src.plots import (
     plot_2d_histo,
     plot_bar,
     plot_box,
-    plot_donut_simple,
     plot_donut_complex,
+    plot_donut_simple,
     plot_histo,
     plot_line,
     plot_scatter,
@@ -114,8 +114,16 @@ if __name__ == "__main__":
             tab_donut_complex,
             tab_line,
         ) = st.tabs(
-            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter",
-                "Donut Simple", "Donut Complex", "Line"]
+            [
+                "Bar",
+                "Histogram",
+                "Time Series",
+                "Boxplot",
+                "Scatter",
+                "Donut Simple",
+                "Donut Complex",
+                "Line",
+            ]
         )
         with tab_bar:
             col_x, col_y, col_color = generate_select_boxes(

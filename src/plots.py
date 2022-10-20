@@ -403,71 +403,84 @@ def plot_donut_complex(df, col_color_1, col_color_2):
         data=df,
         spec={
             **CONFIG_MAIN,
-            "layer": [{
-                "mark": {"type": "arc", "innerRadius": 75, "radius": 150, **CONFIG_MARK},
-                "transform": [
-                    {
-                        "window": [{"op": "count", "as": "total"}],
-                        "frame": [None, None],
+            "layer": [
+                {
+                    "mark": {
+                        "type": "arc",
+                        "innerRadius": 75,
+                        "radius": 150,
+                        **CONFIG_MARK,
                     },
-                    {
-                        "joinaggregate": [{"op": "count", "as": "groupcount"}],
-                        "groupby": [col_color_1, col_color_2],
-                    },
-                    {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
-                ],
-                "encoding": {
-                    "theta": {
-                        "type": "quantitative",
-                        "title": "Count",
-                        "aggregate": "count",
-                    },
-                    "color": {
-                        "field": col_color_1,
-                        "type": "nominal",
-                        "title": col_color_1.capitalize(),
-                    },
-                    "order": {
-                        "field": "share",
-                        "type": "quantitative",
-                        "sort": "descending",
-                        "title": "Share [%]",
-                        "format": ".1%",
-                    },
-                },
-            }, {
-                "mark": {"type": "arc", "innerRadius": 125, "radius": 175, **CONFIG_MARK},
-                "transform": [
-                    {
-                        "window": [{"op": "count", "as": "total"}],
-                        "frame": [None, None],
-                    },
-                    {
-                        "joinaggregate": [{"op": "count", "as": "groupcount"}],
-                        "groupby": [col_color_1, col_color_2],
-                    },
-                    {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
-                ],
-                "encoding": {
-                    "theta": {
-                        "type": "quantitative",
-                        "title": "Count",
-                        "aggregate": "count",
-                    },
-                    "color": {
-                        "field": col_color_2,
-                        "type": "nominal",
-                        "title": col_color_2.capitalize(),
-                    },
-                    "order": {
-                        "field": "share",
-                        "type": "quantitative",
-                        "sort": "descending",
-                        "title": "Share [%]",
-                        "format": ".1%",
+                    "transform": [
+                        {
+                            "window": [{"op": "count", "as": "total"}],
+                            "frame": [None, None],
+                        },
+                        {
+                            "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                            "groupby": [col_color_1, col_color_2],
+                        },
+                        {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
+                    ],
+                    "encoding": {
+                        "theta": {
+                            "type": "quantitative",
+                            "title": "Count",
+                            "aggregate": "count",
+                        },
+                        "color": {
+                            "field": col_color_1,
+                            "type": "nominal",
+                            "title": col_color_1.capitalize(),
+                        },
+                        "order": {
+                            "field": "share",
+                            "type": "quantitative",
+                            "sort": "descending",
+                            "title": "Share [%]",
+                            "format": ".1%",
+                        },
                     },
                 },
-            }]
+                {
+                    "mark": {
+                        "type": "arc",
+                        "innerRadius": 125,
+                        "radius": 175,
+                        **CONFIG_MARK,
+                    },
+                    "transform": [
+                        {
+                            "window": [{"op": "count", "as": "total"}],
+                            "frame": [None, None],
+                        },
+                        {
+                            "joinaggregate": [{"op": "count", "as": "groupcount"}],
+                            "groupby": [col_color_1, col_color_2],
+                        },
+                        {"calculate": ATT_DATA_NUM_GROUP, "as": "share"},
+                    ],
+                    "encoding": {
+                        "theta": {
+                            "type": "quantitative",
+                            "title": "Count",
+                            "aggregate": "count",
+                        },
+                        "color": {
+                            "field": col_color_2,
+                            "type": "nominal",
+                            "title": col_color_2.capitalize(),
+                        },
+                        "order": {
+                            "field": "share",
+                            "type": "quantitative",
+                            "sort": "descending",
+                            "title": "Share [%]",
+                            "format": ".1%",
+                        },
+                    },
+                },
+            ],
         },
     )
 
