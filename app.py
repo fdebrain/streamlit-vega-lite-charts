@@ -7,7 +7,8 @@ from src.plots import (
     plot_2d_histo,
     plot_bar,
     plot_box,
-    plot_donut,
+    plot_donut_complex,
+    plot_donut_simple,
     plot_histo,
     plot_line,
     plot_scatter,
@@ -28,6 +29,7 @@ TIME_SCALES = [
     "monthdate",
     "yearmonthdate",
 ]
+MSG_SELECT_VALUE_X = "Please select a value for X."
 
 
 @st.experimental_memo
@@ -66,6 +68,7 @@ def generate_select_boxes(options_x, options_y, options_color, key_prefix):
             key=f"{key_prefix}_color",
         )
         select_boxes[2] = col_color
+
     return select_boxes
 
 
@@ -107,10 +110,20 @@ if __name__ == "__main__":
             tab_timeseries,
             tab_boxplot,
             tab_scatter,
-            tab_donut,
+            tab_donut_simple,
+            tab_donut_complex,
             tab_line,
         ) = st.tabs(
-            ["Bar", "Histogram", "Time Series", "Boxplot", "Scatter", "Donut", "Line"]
+            [
+                "Bar",
+                "Histogram",
+                "Time Series",
+                "Boxplot",
+                "Scatter",
+                "Donut Simple",
+                "Donut Complex",
+                "Line",
+            ]
         )
         with tab_bar:
             col_x, col_y, col_color = generate_select_boxes(
@@ -121,7 +134,7 @@ if __name__ == "__main__":
             )
 
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y and not col_color:
                 st.subheader("Count bar plot")
                 plot_bar(df, col_x=col_x, agg="count")
@@ -156,7 +169,7 @@ if __name__ == "__main__":
             ordinal = st.checkbox(label="Ordinal", value=False)
 
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y and not col_color:
                 normalize = st.checkbox(label="Normalize", value=False)
 
@@ -225,7 +238,7 @@ if __name__ == "__main__":
             units = st.selectbox(label="Time scale", options=TIME_SCALES)
             mark = st.radio(label="Mark type", options=["line", "bar"], horizontal=True)
             if not col_x:
-                st.warning("Please select a value for X.")
+                st.warning(MSG_SELECT_VALUE_X)
             elif not col_y:
                 st.subheader("Count series plot")
                 plot_timeseries(
@@ -316,17 +329,34 @@ if __name__ == "__main__":
             else:
                 st.warning("Please select values for both X and Y.")
 
-        with tab_donut:
+        with tab_donut_simple:
             _, _, col_color = generate_select_boxes(
                 options_x=None,
                 options_y=None,
                 options_color=cat_cols,
-                key_prefix="donut",
+                key_prefix="sdonut",
             )
             if col_color:
-                plot_donut(df, col_color)
+                plot_donut_simple(df, col_color)
             else:
                 st.warning("Please select a value for Color.")
+
+        with tab_donut_complex:
+            _, _, col_color = generate_select_boxes(
+                options_x=None,
+                options_y=None,
+                options_color=cat_cols,
+                key_prefix="cdonut",
+            )
+            col_color_2 = st.selectbox(
+                label="Second Color",
+                options=[""] + cat_cols,
+                key="cdonut_color2",
+            )
+            if col_color and col_color_2:
+                plot_donut_complex(df, col_color, col_color_2)
+            else:
+                st.warning("Please select a value for both Colors.")
 
         with tab_line:
             col_x, col_y, col_color = generate_select_boxes(
