@@ -4,8 +4,6 @@
 
 Explore tabular datasets using [Streamlit](https://streamlit.io/) and [Vega-Lite](https://vega.github.io/vega-lite/).
 
-Don't forget to :star: the repo :)
-
 ## Requirements
 
 Python 3.10
